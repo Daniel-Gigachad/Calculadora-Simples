@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Calculadora</title>
+</head>
+<body>
+    <div class= "calculadora">
+        
+            <input type="text" id="visor" placeholder="0" readonly>
+        
+        
+            <input type="button" class="button1" value="%" id="percent" onclick="add('%')">
+            <input type="button" class="button1" value="√" id="sqrRoot" onclick="add('√')">
+            <input type="button" class="button1" value="C" id="C" onclick="removeAll()">
+            <input type="button" class="buttonX" value="⌫" id="slice" onclick="removeLastDigit()">
+        
+        
+            <input type="button" class="button2" value="7" id="7" onclick="add('7')">
+            <input type="button" class="button2" value="8" id="8" onclick="add('8')">
+            <input type="button" class="button2" value="9" id="9" onclick="add('9')">
+            <input type="button" class="buttonX" value="X" id="multiply" onclick="add('*')">
+        
+        
+            <input type="button" class="button2" value="4" id="4" onclick="add('4')">
+            <input type="button" class="button2" value="5" id="5" onclick="add('5')">
+            <input type="button" class="button2" value="6" id="6" onclick="add('6')">
+            <input type="button" class="buttonX" value="-" id="minus" onclick="add('-')">
+        
+        
+            <input type="button" class="button2" value="1" id="1" onclick="add('1')">
+            <input type="button" class="button2" value="2" id="2" onclick="add('2')">
+            <input type="button" class="button2" value="3" id="3" onclick="add('3')">
+            <input type="button" class="buttonX" value="+" id="sum" onclick="add('+')">
+        
+        
+            <input type="button" class="button2" value="±" id="±" onclick="invert()">
+            <input type="button" class="button2" value="0" id="0" onclick="add('0')">
+            <input type="button" class="button2" value="." id="." onclick="add('.')">
+            <input type="button" class="button3" value="=" id="equal" onclick="calc()">
+        </div>
+    <script src="script.js"></script>
+</body>
+</html>
