@@ -23,6 +23,7 @@ body {
     box-shadow: 0px 0px 15px rgba(22, 22, 22, 0.5);
 }
 
+/*light gray for row 1 buttons*/
 .button1 {
     width: 50px;
     height: 50px;
@@ -34,6 +35,7 @@ body {
     color: white;
 }
 
+/*dark gray for rows 2, 3, 4 and 5*/
 .button2 {
     width: 50px;
     height: 50px;
@@ -45,6 +47,7 @@ body {
     color: white;
 }
 
+/*color red for the "= button"*/
 .button3 {
     width: 50px;
     height: 50px;
@@ -56,6 +59,7 @@ body {
     color: white;
 }
 
+/*color yellow for the buttons on the right column*/
 .buttonX {
     width: 50px;
     height: 50px;
