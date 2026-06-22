@@ -7,40 +7,41 @@
     <title>Calculadora</title>
 </head>
 <body>
-    <div class= "calculadora">
+    <div class="calculator">
+        <!-- Display -->
+        <input type="text" id="display" placeholder="|" readonly>
         
-            <input type="text" id="visor" readonly>
-        
-        
-            <input type="button" class="button" value="%" id="%" onclick="">
-            <input type="button" class="button" value="CE" id="CE" onclick="">
-            <input type="button" class="button" value="C" id="C" onclick="">
-            <input type="button" class="button" value="⌫" id="⌫" onclick="">
-        
-        
-            <input type="button" class="button" value="7" id="7" onclick="add(7)">
-            <input type="button" class="button" value="8" id="8" onclick="add(8)">
-            <input type="button" class="button" value="9" id="9" onclick="add(9)">
-            <input type="button" class="button" value="X" id="X" onclick="">
-        
-        
-            <input type="button" class="button" value="4" id="4" onclick="add(4)">
-            <input type="button" class="button" value="5" id="5" onclick="add(5)">
-            <input type="button" class="button" value="6" id="6" onclick="add(6)">
-            <input type="button" class="button" value="-" id="-" onclick="">
-        
-        
-            <input type="button" class="button" value="1" id="1" onclick="add(1)">
-            <input type="button" class="button" value="2" id="2" onclick="add(2)">
-            <input type="button" class="button" value="3" id="3" onclick="add(3)">
-            <input type="button" class="button" value="+" id="+" onclick="">
-        
-        
-            <input type="button" class="button" value="±" id="±" onclick="">
-            <input type="button" class="button" value="0" id="0" onclick="add(0)">
-            <input type="button" class="button" value="," id="," onclick="">
-            <input type="button" class="button" value="=" id="=" onclick="">
-        </div>
+        <!-- Row 1 -->
+        <button class="btn-function" onclick="clearAll()">C</button>
+        <button class="btn-function" onclick="addParentheses()">( )</button>
+        <button class="btn-function" onclick="calculatePercentage()">%</button>
+        <button class="btn-operation" onclick="appendValue('/')">÷</button>
+    
+        <!-- Row 2 -->
+        <button class="btn-number" onclick="appendValue('7')">7</button>
+        <button class="btn-number" onclick="appendValue('8')">8</button>
+        <button class="btn-number" onclick="appendValue('9')">9</button>
+        <button class="btn-operation" onclick="appendValue('*')">X</button>
+    
+        <!-- Row 3 -->
+        <button class="btn-number" onclick="appendValue('4')">4</button>
+        <button class="btn-number" onclick="appendValue('5')">5</button>
+        <button class="btn-number" onclick="appendValue('6')">6</button>
+        <button class="btn-operation" onclick="appendValue('-')">-</button>
+    
+        <!-- Row 4 -->
+        <button class="btn-number" onclick="appendValue('1')">1</button>
+        <button class="btn-number" onclick="appendValue('2')">2</button>
+        <button class="btn-number" onclick="appendValue('3')">3</button>
+        <button class="btn-operation" onclick="appendValue('+')">+</button>
+    
+        <!-- Row 5 -->
+        <button class="btn-number" onclick="appendValue('0')">0</button>
+        <button class="btn-number" onclick="appendValue('.')">.</button>
+        <!-- I didn't add the operation button class because I didn't want the orange color for it -->
+        <button class="btn-number" onclick="removeLastDigit()">⌫</button> 
+        <button class="btn-equal" onclick="calculate()">=</button>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>
