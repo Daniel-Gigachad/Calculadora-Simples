@@ -156,6 +156,7 @@
         const display = document.getElementById("display"); // NEW: adding the variable to pull the display without having to repeat the document every time
 
         function appendValue(value) {
+            
             // NEW: refining the code. Now, if the message "Error" is on display, it will be cleared first
             if (display.value === "Error") {
                 clearAll();
@@ -172,7 +173,7 @@
                 display.value = display.value.slice(0, -1) + value;
                 return; // Stops the function here so it doesn't add the number twice
             }
-            
+
             display.value += value;
         }
 
