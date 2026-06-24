@@ -1,47 +1,244 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <title>Calculadora</title>
+
+    <style>
+        * {
+            /* Sets a fixed size for all boxes and buttons */
+            box-sizing: border-box;
+        }
+
+        body {
+            background-image: linear-gradient(135deg, #4f2aa5, #7f4fbe);
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            /* centers */
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .calculator {
+            width: 90%;
+            /* replaced the old pixel scale with a percentage to fit the screen */
+            max-width: 320px;
+            background-color: #2c3035;
+            padding: 20px;
+            border-radius: 30px;
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.5);
+            display: grid;
+            /* replaced the old "grid flex" and left only "grid" */
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        #display {
+            grid-column: span 4;
+            background-color: #c3c8c9;
+            border: none;
+            border-radius: 15px;
+            height: 60px;
+            font-size: 30px;
+            color: #333;
+            text-align: right;
+            padding: 10px;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        /* Adding Caret */
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        #display::placeholder {
+            color: #333;
+            animation: blink 1s step-start infinite;
+        }
+
+        button {
+            height: 60px;
+            font-size: 24px;
+            cursor: pointer;
+            border: none;
+            border-radius: 20px;
+            color: white;
+            transition: background-color 0.2s;
+            /* Smooth animation when hovering */
+        }
+
+        .btn-function {
+            background-color: #5a6066;
+        }
+
+        .btn-function:hover {
+            background-color: #6c737a;
+        }
+
+        /* Number buttons */
+        .btn-number {
+            background-color: #3b4045;
+        }
+
+        .btn-number:hover {
+            background-color: #4a5056;
+        }
+
+        /* Operation buttons (+, -, *, /) */
+        .btn-operation {
+            background-color: #f39c12;
+            /* iOS style orange */
+            color: white;
+        }
+
+        .btn-operation:hover {
+            background-color: #e67e22;
+        }
+
+        /* Equal button */
+        .btn-equal {
+            background-color: #e74c3c;
+        }
+
+        .btn-equal:hover {
+            background-color: #c0392b;
+        }
+    </style>
 </head>
+
 <body>
     <div class="calculator">
         <!-- Display -->
         <input type="text" id="display" placeholder="|" readonly>
-        
+
         <!-- Row 1 -->
         <button class="btn-function" onclick="clearAll()">C</button>
         <button class="btn-function" onclick="addParentheses()">( )</button>
         <button class="btn-function" onclick="calculatePercentage()">%</button>
         <button class="btn-operation" onclick="appendValue('/')">÷</button>
-    
+
         <!-- Row 2 -->
         <button class="btn-number" onclick="appendValue('7')">7</button>
         <button class="btn-number" onclick="appendValue('8')">8</button>
         <button class="btn-number" onclick="appendValue('9')">9</button>
         <button class="btn-operation" onclick="appendValue('*')">X</button>
-    
+
         <!-- Row 3 -->
         <button class="btn-number" onclick="appendValue('4')">4</button>
         <button class="btn-number" onclick="appendValue('5')">5</button>
         <button class="btn-number" onclick="appendValue('6')">6</button>
         <button class="btn-operation" onclick="appendValue('-')">-</button>
-    
+
         <!-- Row 4 -->
         <button class="btn-number" onclick="appendValue('1')">1</button>
         <button class="btn-number" onclick="appendValue('2')">2</button>
         <button class="btn-number" onclick="appendValue('3')">3</button>
         <button class="btn-operation" onclick="appendValue('+')">+</button>
-    
+
         <!-- Row 5 -->
         <button class="btn-number" onclick="appendValue('0')">0</button>
         <button class="btn-number" onclick="appendValue('.')">.</button>
         <!-- I didn't add the operation button class because I didn't want the orange color for it -->
-        <button class="btn-number" onclick="removeLastDigit()">⌫</button> 
+        <button class="btn-number" onclick="removeLastDigit()">⌫</button>
         <button class="btn-equal" onclick="calculate()">=</button>
     </div>
-    <script src="script.js"></script>
+
+    <script>
+        const display = document.getElementById("display"); // NEW: adding the variable to pull the display without having to repeat the document every time
+
+        function appendValue(value) {
+            // NEW: refining the code. Now, if the message "Error" is on display, it will be cleared first
+            if (display.value === "Error") {
+                clearAll();
+            }
+
+            // UX FIX: Prevents creating numbers with leading zeros like "05"
+            // Splits the display value by math operators to isolate the current number being typed
+            let parts = display.value.split(/[\+\-\*\/\(]/);
+            let currentNumber = parts[parts.length - 1];
+
+            // If the current number is exactly "0" and the user types another number (0-9)
+            if (currentNumber === "0" && value >= '0' && value <= '9') {
+                // Removes the "0" and appends the new number instead
+                display.value = display.value.slice(0, -1) + value;
+                return; // Stops the function here so it doesn't add the number twice
+            }
+            
+            display.value += value;
+        }
+
+        function calculate() {
+            try {
+                if (display.value !== "") { // NEW: parameter "must have something written"
+
+                    // All this part is so the system doesn't error out when the user types something like "8(5)"
+                    let expression = display.value; // Avoids repeating "display.value" every time, which can be confusing
+
+                    // 1. Looks for a digit (\d) followed by a '(' and puts a '*' in the middle
+                    expression = expression.replace(/(\d)(\()/g, '$1*(');
+
+                    // 2. Looks for a ')' followed by a digit (\d) and puts a '*' in the middle
+                    expression = expression.replace(/(\))(\d)/g, ')*$2');
+
+                    // 3. Looks for a ')' followed by a '(' and puts a '*' in the middle
+                    expression = expression.replace(/(\))(\()/g, ')*(');
+
+                    display.value = eval(expression);
+                }
+            } catch (error) {
+                display.value = "Error";
+            }
+        }
+
+        // Button: "⌫" function
+        function removeLastDigit() {
+            if (display.value !== "") { // Must have something written
+                display.value = display.value.slice(0, -1);
+            }
+        }
+
+        // Button: "C" function
+        function clearAll() {
+            display.value = "";
+        }
+
+        // NEW: Parentheses function
+        function addParentheses() {
+            let expression = display.value; // Avoids repeating "display.value" every time, which can be confusing
+            if (expression === "Error") {
+                clearAll(); // Clears the value that is on the DISPLAY
+                expression = ""; // Empties the MEMORY to avoid potential errors
+            }
+
+            // Counts how many '(' and ')' exist in the display
+            let openCount = expression.split("(").length - 1;
+            let closeCount = expression.split(")").length - 1;
+            let lastChar = expression.slice(-1);
+
+            // Logic: if there are more open '(' than closed, and the last character is a number or ')', we close the parenthesis
+            if (openCount > closeCount && ((lastChar >= '0' && lastChar <= '9') || lastChar === ')')) {
+                appendValue(')');
+            } else {
+                // Otherwise, we open a new parenthesis
+                appendValue('(');
+            }
+        }
+
+        function calculatePercentage() {
+            if (display.value !== "" && display.value !== "Error") {
+                display.value = parseFloat(display.value) / 100; // Takes the current number and divides by 100
+            }
+        }
+    </script>
 </body>
+
 </html>
