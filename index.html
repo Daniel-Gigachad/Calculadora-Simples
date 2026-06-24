@@ -153,25 +153,46 @@
     </div>
 
     <script>
-        const display = document.getElementById("display"); // NEW: adding the variable to pull the display without having to repeat the document every time
+        const display = document.getElementById("display"); // adding the variable to pull the display without having to repeat the document every time
 
         function appendValue(value) {
-            
-            // NEW: refining the code. Now, if the message "Error" is on display, it will be cleared first
             if (display.value === "Error") {
                 clearAll();
             }
 
+            // NEW BUG FIX: Prevents starting the expression with invalid operators (*, /, +) or isolated dots
+            if (display.value === "") {
+                if (['*', '/', '+'].includes(value)) {
+                    return; // Ignore the click and do nothing
+                }
+                if (value === '.') {
+                    display.value = "0."; // Auto-formats to "0." for better UX
+                    return;
+                }
+            }
+
+            // NEW BUG FIX: Prevents consecutive operators or dots (e.g., "++" or "..")
+            const operators = ['+', '-', '*', '/', '.'];
+            const lastChar = display.value.slice(-1);
+
+            if (operators.includes(lastChar) && operators.includes(value)) {
+                // If both the last char and the new value are operators, replace the last one
+                display.value = display.value.slice(0, -1) + value;
+                return;
+            }
+
             // UX FIX: Prevents creating numbers with leading zeros like "05"
-            // Splits the display value by math operators to isolate the current number being typed
             let parts = display.value.split(/[\+\-\*\/\(]/);
             let currentNumber = parts[parts.length - 1];
 
-            // If the current number is exactly "0" and the user types another number (0-9)
+            // NEW BUG FIX: Prevents adding more than one decimal point in a single number
+            if (value === '.' && currentNumber.includes('.')) {
+                return; // Stops the function, ignoring the extra dot
+            }
+
             if (currentNumber === "0" && value >= '0' && value <= '9') {
-                // Removes the "0" and appends the new number instead
                 display.value = display.value.slice(0, -1) + value;
-                return; // Stops the function here so it doesn't add the number twice
+                return;
             }
 
             display.value += value;
@@ -179,7 +200,7 @@
 
         function calculate() {
             try {
-                if (display.value !== "") { // NEW: parameter "must have something written"
+                if (display.value !== "" && display.value !== "Error") { //parameter "must have something written" 
 
                     // All this part is so the system doesn't error out when the user types something like "8(5)"
                     let expression = display.value; // Avoids repeating "display.value" every time, which can be confusing
